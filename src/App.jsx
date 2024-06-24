@@ -18,10 +18,10 @@ export default function App() {
     { id: "column-4", items: [] },
   ];
 
-  const { columns, handleDragEnd } = useDrag(initialColumns);
+  const { columns, handleDragEnd, handleDragUpdate } = useDrag(initialColumns);
 
   return (
-    <DragDropContext onDragEnd={handleDragEnd}>
+    <DragDropContext onDragEnd={handleDragEnd} onDragUpdate={handleDragUpdate}>
       <ColumnListStyle>
         {columns.map((column, index) => (
           <Column
