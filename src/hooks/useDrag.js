@@ -20,6 +20,7 @@ export const useDrag = (initialColumns) => {
       const destinationColumnIndex = result.destination.droppableId;
 
       if (sourceColumnIndex === destinationColumnIndex) {
+        // 동일한 판 내에서 움직인 경우
         const newItems = reorder(
           columns[sourceColumnIndex].items,
           result.source.index,
@@ -29,6 +30,7 @@ export const useDrag = (initialColumns) => {
         newColumns[sourceColumnIndex].items = newItems;
         setColumns(newColumns);
       } else {
+        // 다른 판으로 움직인 경우
         const sourceItems = Array.from(columns[sourceColumnIndex].items);
         const destinationItems = Array.from(
           columns[destinationColumnIndex].items
