@@ -1,7 +1,9 @@
 import { useState, useCallback } from "react";
+import { useToast } from "./useToast";
 
 export const useDrag = (initialColumns) => {
   const [columns, setColumns] = useState(initialColumns);
+  const { toast, showToast } = useToast();
 
   const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
@@ -21,10 +23,11 @@ export const useDrag = (initialColumns) => {
         result.source.droppableId === "0" &&
         result.destination.droppableId === "2"
       ) {
-        // TODO: UI 개선
-        alert("이동할 수 없는 지점입니다.");
+        showToast("'칼럼-0'에서 '칼럼-2'로는 이동할 수 없습니다.");
         return;
       }
+
+      // TODO: 짝수 아이템은 다른 짝수 아이템 앞으로 이동할 수 없습니다.
 
       const sourceColumnIndex = result.source.droppableId;
       const destinationColumnIndex = result.destination.droppableId;
@@ -84,5 +87,5 @@ export const useDrag = (initialColumns) => {
     [columns]
   );
 
-  return { columns, handleDragEnd, handleDragUpdate };
+  return { columns, handleDragEnd, handleDragUpdate, toast };
 };
