@@ -44,7 +44,11 @@ export const useDrag = (initialColumns) => {
             result.destination.index + 1
           ]?.content.split(" ")[1] || 1;
 
-        if (sourceItemNum % 2 === 0 && destinationItemNum % 2 === 0) {
+        if (
+          sourceItemNum % 2 === 0 &&
+          destinationItemNum % 2 === 0 &&
+          sourceItemNum !== destinationItemNum
+        ) {
           showToast(
             "짝수 아이템은 다른 짝수 아이템 앞으로 이동할 수 없습니다."
           );
@@ -159,7 +163,11 @@ export const useDrag = (initialColumns) => {
             result.destination.index + 1
           ]?.content.split(" ")[1] || 1;
 
-        if (sourceItemNum % 2 === 0 && destinationItemNum % 2 === 0) {
+        if (
+          sourceItemNum % 2 === 0 &&
+          destinationItemNum % 2 === 0 &&
+          sourceItemNum !== destinationItemNum
+        ) {
           setColumns(
             columns.map((column, index) => {
               if (index === +destinationColumnIndex) {
