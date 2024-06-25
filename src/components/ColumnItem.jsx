@@ -1,29 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { GRID } from "../constants/style";
 import styled from "styled-components";
 
-const ColumnItem = React.memo(({ item, index }) => {
-  return (
-    <Draggable draggableId={item.id} index={index}>
-      {(provided, snapshot) => (
-        <ColumnItemStyle
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          style={getItemStyle(
-            snapshot.isDragging,
-            provided.draggableProps.style
-          )}
-        >
-          <div {...provided.dragHandleProps} className="drag-handle">
-            ||
-          </div>
-          <div className="draggable-content">{item.content}</div>
-        </ColumnItemStyle>
-      )}
-    </Draggable>
-  );
-});
+const ColumnItem = React.memo(
+  ({ item, index, selected, onContentClick, columnId }) => {
+    const handleContentClick = () => {
+      onContentClick(columnId, index);
+    };
+
+    return (
+      <Draggable draggableId={item.id} index={index}>
+        {(provided, snapshot) => (
+          <ColumnItemStyle
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            style={getItemStyle(
+              snapshot.isDragging,
+              provided.draggableProps.style,
+              selected
+            )}
+          >
+            <div {...provided.dragHandleProps} className="drag-handle">
+              ||
+            </div>
+            <div className="draggable-content" onClick={handleContentClick}>
+              {item.content}
+            </div>
+          </ColumnItemStyle>
+        )}
+      </Draggable>
+    );
+  }
+);
 
 const ColumnItemStyle = styled.div`
   display: flex;
@@ -45,12 +54,13 @@ const ColumnItemStyle = styled.div`
     width: 100%;
     text-align: end;
     padding: ${GRID}px;
+    cursor: pointer;
   }
 `;
 
-const getItemStyle = (isDragging, draggableStyle) => ({
+const getItemStyle = (isDragging, draggableStyle, isClicked) => ({
   userSelect: "none",
-  background: isDragging ? "lightgreen" : "grey",
+  background: isDragging || isClicked ? "lightgreen" : "grey",
   ...draggableStyle,
 });
 

@@ -4,7 +4,7 @@ import ColumnItem from "./ColumnItem";
 import { GRID } from "../constants/style";
 import styled, { keyframes, css } from "styled-components";
 
-export default function Column({ columnId, items, warning }) {
+export default function Column({ columnId, items, warning, onContentClick }) {
   return (
     <ColumnStyle>
       <div className="header">{columnId}</div>
@@ -17,7 +17,14 @@ export default function Column({ columnId, items, warning }) {
             {...provided.droppableProps}
           >
             {items.map((item, index) => (
-              <ColumnItem key={item.id} index={index} item={item} />
+              <ColumnItem
+                key={item.id}
+                index={index}
+                item={item}
+                selected={item.selected}
+                columnId={columnId}
+                onContentClick={onContentClick}
+              />
             ))}
             {provided.placeholder}
           </DroppableContainer>

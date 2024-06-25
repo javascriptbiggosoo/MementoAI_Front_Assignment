@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import { useDrag } from "./hooks/useDrag";
 import Column from "./components/Column";
@@ -9,6 +9,7 @@ const getItems = (count, offset = 0) =>
   Array.from({ length: count }, (_, k) => k + offset).map((k) => ({
     id: `item-${k}`,
     content: `item ${k}`,
+    selected: false,
   }));
 
 const initialColumns = [
@@ -19,7 +20,7 @@ const initialColumns = [
 ];
 
 export default function App() {
-  const { columns, handleDragEnd, handleDragUpdate, toast } =
+  const { columns, handleDragEnd, handleDragUpdate, toast, handleItemSelect } =
     useDrag(initialColumns);
 
   return (
@@ -35,6 +36,7 @@ export default function App() {
               items={column.items}
               columnId={index.toString()}
               warning={column.warning}
+              onContentClick={handleItemSelect}
             />
           ))}
         </ColumnListStyle>

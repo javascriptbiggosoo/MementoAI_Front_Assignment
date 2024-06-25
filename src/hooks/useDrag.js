@@ -203,5 +203,14 @@ export const useDrag = (initialColumns) => {
     [columns]
   );
 
-  return { columns, handleDragEnd, handleDragUpdate, toast };
+  const handleItemSelect = useCallback(
+    (columnIndex, itemIndex) => {
+      const newColumns = [...columns];
+      newColumns[columnIndex].items[itemIndex].selected =
+        !newColumns[columnIndex].items[itemIndex].selected;
+      setColumns(newColumns);
+    },
+    [columns]
+  );
+  return { columns, handleDragEnd, handleDragUpdate, toast, handleItemSelect };
 };
