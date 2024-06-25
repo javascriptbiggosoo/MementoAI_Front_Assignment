@@ -3,6 +3,7 @@ import { useToast } from "./useToast";
 
 export const useDrag = (initialColumns) => {
   const [columns, setColumns] = useState(initialColumns);
+  // 컬럼인덱스 순으로 우선 정렬 후 컬럼별 아이템인덱스 순으로 정렬
   const [selectedItems, setSelectedItems] = useState([]);
   const [case1, setCase1] = useState(false);
   const [case2, setCase2] = useState(false);
