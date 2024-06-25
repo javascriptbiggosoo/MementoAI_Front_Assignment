@@ -50,6 +50,7 @@ const ColumnItemStyle = styled.div`
     width: 25px;
     color: grey;
   }
+
   .draggable-content {
     width: 100%;
     text-align: end;
