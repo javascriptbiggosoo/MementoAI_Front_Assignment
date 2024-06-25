@@ -3,6 +3,9 @@ import { useToast } from "./useToast";
 
 export const useDrag = (initialColumns) => {
   const [columns, setColumns] = useState(initialColumns);
+  const [case1, setCase1] = useState(false);
+  const [case2, setCase2] = useState(false);
+
   const { toast, showToast } = useToast();
 
   const reorder = (list, startIndex, endIndex) => {
@@ -13,48 +16,22 @@ export const useDrag = (initialColumns) => {
     return newList;
   };
 
-  // TODO: 제약조건을 상태로 만들어서 중복 제거
   const handleDragEnd = useCallback(
     (result) => {
       if (!result.destination) {
         return;
       }
-
-      if (
-        result.source.droppableId === "0" &&
-        result.destination.droppableId === "2"
-      ) {
+      if (case1) {
         showToast("'칼럼-0'에서 '칼럼-2'로는 이동할 수 없습니다.");
+        return;
+      }
+      if (case2) {
+        showToast("짝수 아이템은 다른 짝수 아이템 앞으로 이동할 수 없습니다.");
         return;
       }
 
       const sourceColumnIndex = result.source.droppableId;
       const destinationColumnIndex = result.destination.droppableId;
-
-      const sourceItemNum =
-        +columns[sourceColumnIndex].items[result.source.index].content.split(
-          " "
-        )[1];
-
-      // if (
-      //   result.destination.index < columns[destinationColumnIndex].items.length
-      // ) {
-      //   const destinationItemNum =
-      //     +columns[destinationColumnIndex].items[
-      //       result.destination.index + 1
-      //     ]?.content.split(" ")[1] || 1;
-
-      //   if (
-      //     sourceItemNum % 2 === 0 &&
-      //     destinationItemNum % 2 === 0 &&
-      //     sourceItemNum !== destinationItemNum
-      //   ) {
-      //     showToast(
-      //       "짝수 아이템은 다른 짝수 아이템 앞으로 이동할 수 없습니다."
-      //     );
-      //     return;
-      //   }
-      // }
 
       if (sourceColumnIndex === destinationColumnIndex) {
         // 동일한 판 내에서 움직인 경우
@@ -103,7 +80,6 @@ export const useDrag = (initialColumns) => {
     [columns]
   );
 
-  // TODO: 이동할 수 없는 지점으로 아이템을 드래그 할 경우, 제약이 있음을 사용자가 알 수 있도록 합니다. (ex. 드래그 중인 아이템의 색상이 붉은색으로 변경됨 등)
   const handleDragUpdate = useCallback(
     (result) => {
       if (!result.destination || !result.source) {
@@ -132,6 +108,7 @@ export const useDrag = (initialColumns) => {
             return column;
           })
         );
+        setCase1(true);
         return;
       } else {
         setColumns(
@@ -143,6 +120,7 @@ export const useDrag = (initialColumns) => {
           })
         );
         columns[2].warning = false;
+        setCase1(false);
       }
 
       // 제약조건 2
@@ -182,9 +160,9 @@ export const useDrag = (initialColumns) => {
             ]?.content.split(" ")[1];
         }
 
-        console.log(result);
-        console.log(columns[destinationColumnIndex]);
-        console.log(sourceItemNum, destinationItemNum);
+        // console.log(result);
+        // console.log(columns[destinationColumnIndex]);
+        // console.log(sourceItemNum, destinationItemNum);
 
         if (
           sourceItemNum % 2 === 0 &&
@@ -202,6 +180,7 @@ export const useDrag = (initialColumns) => {
               return column;
             })
           );
+          setCase2(true);
         } else {
           setColumns(
             columns.map((column) => ({
@@ -209,6 +188,7 @@ export const useDrag = (initialColumns) => {
               warning: false,
             }))
           );
+          setCase2(false);
         }
       } else {
         setColumns(
@@ -217,6 +197,7 @@ export const useDrag = (initialColumns) => {
             warning: false,
           }))
         );
+        setCase2(false);
       }
     },
     [columns]
