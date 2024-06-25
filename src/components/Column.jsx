@@ -41,6 +41,8 @@ const ColumnStyle = styled.div`
   border: 1px solid lightgrey;
   border-radius: 2px;
   margin: ${GRID}px;
+  width: 400px;
+  min-width: 200px;
 `;
 
 const blinkAnimation = keyframes`
@@ -62,8 +64,8 @@ const DroppableContainer = styled.div`
   background: ${({ isDraggingOver }) =>
     isDraggingOver ? "lightblue" : "lightgrey"};
   padding: ${GRID}px;
-  width: 200px;
-  min-height: 700px;
+  width: 100%;
+  min-height: 500px;
   ${({ isDraggingOver }) =>
     isDraggingOver &&
     css`
