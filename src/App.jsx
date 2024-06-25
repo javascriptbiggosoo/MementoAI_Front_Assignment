@@ -12,10 +12,10 @@ const getItems = (count, offset = 0) =>
   }));
 
 const initialColumns = [
-  { id: "column-1", items: getItems(10) },
-  { id: "column-2", items: [] },
-  { id: "column-3", items: [] },
-  { id: "column-4", items: [] },
+  { id: "column-1", items: getItems(10), warning: false },
+  { id: "column-2", items: [], warning: false },
+  { id: "column-3", items: [], warning: false },
+  { id: "column-4", items: [], warning: false },
 ];
 
 export default function App() {
@@ -34,6 +34,7 @@ export default function App() {
               key={column.id}
               items={column.items}
               columnId={index.toString()}
+              warning={column.warning}
             />
           ))}
         </ColumnListStyle>

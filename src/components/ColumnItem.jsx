@@ -5,32 +5,51 @@ import styled from "styled-components";
 
 const ColumnItem = React.memo(({ item, index }) => {
   return (
-    <ColumnItemStyle>
-      <Draggable draggableId={item.id} index={index}>
-        {(provided, snapshot) => (
-          <div
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-            style={getItemStyle(
-              snapshot.isDragging,
-              provided.draggableProps.style
-            )}
-          >
-            {item.content}
+    <Draggable draggableId={item.id} index={index}>
+      {(provided, snapshot) => (
+        <ColumnItemStyle
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          style={getItemStyle(
+            snapshot.isDragging,
+            provided.draggableProps.style
+          )}
+        >
+          <div {...provided.dragHandleProps} className="drag-handle">
+            ||
           </div>
-        )}
-      </Draggable>
-    </ColumnItemStyle>
+          <div className="draggable-content">{item.content}</div>
+        </ColumnItemStyle>
+      )}
+    </Draggable>
   );
 });
 
-const ColumnItemStyle = styled.div``
+const ColumnItemStyle = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 0 0 ${GRID}px 0;
+  position: relative;
+
+  .drag-handle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    background-color: black;
+    height: 100%;
+    width: 25px;
+    color: grey;
+  }
+  .draggable-content {
+    width: 100%;
+    text-align: end;
+    padding: ${GRID}px;
+  }
+`;
 
 const getItemStyle = (isDragging, draggableStyle) => ({
   userSelect: "none",
-  padding: GRID * 2,
-  margin: `0 0 ${GRID}px 0`,
   background: isDragging ? "lightgreen" : "grey",
   ...draggableStyle,
 });

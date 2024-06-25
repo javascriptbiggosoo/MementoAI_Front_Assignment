@@ -82,6 +82,33 @@ export const useDrag = (initialColumns) => {
   // TODO: 이동할 수 없는 지점으로 아이템을 드래그 할 경우, 제약이 있음을 사용자가 알 수 있도록 합니다. (ex. 드래그 중인 아이템의 색상이 붉은색으로 변경됨 등)
   const handleDragUpdate = useCallback(
     (result) => {
+      if (
+        result.source?.droppableId === "0" &&
+        result.destination?.droppableId === "2"
+      ) {
+        setColumns(
+          columns.map((column, index) => {
+            if (index === 2) {
+              return {
+                ...column,
+                warning: true,
+              };
+            }
+            return column;
+          })
+        );
+        return;
+      } else {
+        setColumns(
+          columns.map((column) => {
+            return {
+              ...column,
+              warning: false,
+            };
+          })
+        );
+        columns[2].warning = false;
+      }
       console.log(result);
     },
     [columns]
