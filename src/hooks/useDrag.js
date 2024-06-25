@@ -13,6 +13,7 @@ export const useDrag = (initialColumns) => {
     return newList;
   };
 
+  // TODO: 제약조건을 상태로 만들어서 중복 제거
   const handleDragEnd = useCallback(
     (result) => {
       if (!result.destination) {
@@ -27,10 +28,29 @@ export const useDrag = (initialColumns) => {
         return;
       }
 
-      // TODO: 짝수 아이템은 다른 짝수 아이템 앞으로 이동할 수 없습니다.
-
       const sourceColumnIndex = result.source.droppableId;
       const destinationColumnIndex = result.destination.droppableId;
+
+      const sourceItemNum =
+        +columns[sourceColumnIndex].items[result.source.index].content.split(
+          " "
+        )[1];
+
+      if (
+        result.destination.index < columns[destinationColumnIndex].items.length
+      ) {
+        const destinationItemNum =
+          +columns[destinationColumnIndex].items[
+            result.destination.index + 1
+          ]?.content.split(" ")[1] || 1;
+
+        if (sourceItemNum % 2 === 0 && destinationItemNum % 2 === 0) {
+          showToast(
+            "짝수 아이템은 다른 짝수 아이템 앞으로 이동할 수 없습니다."
+          );
+          return;
+        }
+      }
 
       if (sourceColumnIndex === destinationColumnIndex) {
         // 동일한 판 내에서 움직인 경우
@@ -82,6 +102,17 @@ export const useDrag = (initialColumns) => {
   // TODO: 이동할 수 없는 지점으로 아이템을 드래그 할 경우, 제약이 있음을 사용자가 알 수 있도록 합니다. (ex. 드래그 중인 아이템의 색상이 붉은색으로 변경됨 등)
   const handleDragUpdate = useCallback(
     (result) => {
+      if (!result.destination || !result.source) {
+        setColumns(
+          columns.map((column) => ({
+            ...column,
+            warning: false,
+          }))
+        );
+        return;
+      }
+
+      // 제약조건 1
       if (
         result.source?.droppableId === "0" &&
         result.destination?.droppableId === "2"
@@ -110,6 +141,52 @@ export const useDrag = (initialColumns) => {
         columns[2].warning = false;
       }
       console.log(result);
+
+      // 제약조건 2
+      const sourceColumnIndex = result.source.droppableId;
+      const destinationColumnIndex = result.destination.droppableId;
+
+      const sourceItemNum =
+        +columns[sourceColumnIndex].items[result.source.index].content.split(
+          " "
+        )[1];
+
+      if (
+        result.destination.index < columns[destinationColumnIndex].items.length
+      ) {
+        const destinationItemNum =
+          +columns[destinationColumnIndex].items[
+            result.destination.index + 1
+          ]?.content.split(" ")[1] || 1;
+
+        if (sourceItemNum % 2 === 0 && destinationItemNum % 2 === 0) {
+          setColumns(
+            columns.map((column, index) => {
+              if (index === +destinationColumnIndex) {
+                return {
+                  ...column,
+                  warning: true,
+                };
+              }
+              return column;
+            })
+          );
+        } else {
+          setColumns(
+            columns.map((column) => ({
+              ...column,
+              warning: false,
+            }))
+          );
+        }
+      } else {
+        setColumns(
+          columns.map((column) => ({
+            ...column,
+            warning: false,
+          }))
+        );
+      }
     },
     [columns]
   );
