@@ -36,25 +36,25 @@ export const useDrag = (initialColumns) => {
           " "
         )[1];
 
-      if (
-        result.destination.index < columns[destinationColumnIndex].items.length
-      ) {
-        const destinationItemNum =
-          +columns[destinationColumnIndex].items[
-            result.destination.index + 1
-          ]?.content.split(" ")[1] || 1;
+      // if (
+      //   result.destination.index < columns[destinationColumnIndex].items.length
+      // ) {
+      //   const destinationItemNum =
+      //     +columns[destinationColumnIndex].items[
+      //       result.destination.index + 1
+      //     ]?.content.split(" ")[1] || 1;
 
-        if (
-          sourceItemNum % 2 === 0 &&
-          destinationItemNum % 2 === 0 &&
-          sourceItemNum !== destinationItemNum
-        ) {
-          showToast(
-            "짝수 아이템은 다른 짝수 아이템 앞으로 이동할 수 없습니다."
-          );
-          return;
-        }
-      }
+      //   if (
+      //     sourceItemNum % 2 === 0 &&
+      //     destinationItemNum % 2 === 0 &&
+      //     sourceItemNum !== destinationItemNum
+      //   ) {
+      //     showToast(
+      //       "짝수 아이템은 다른 짝수 아이템 앞으로 이동할 수 없습니다."
+      //     );
+      //     return;
+      //   }
+      // }
 
       if (sourceColumnIndex === destinationColumnIndex) {
         // 동일한 판 내에서 움직인 경우
@@ -144,7 +144,6 @@ export const useDrag = (initialColumns) => {
         );
         columns[2].warning = false;
       }
-      console.log(result);
 
       // 제약조건 2
       const sourceColumnIndex = result.source.droppableId;
@@ -156,12 +155,36 @@ export const useDrag = (initialColumns) => {
         )[1];
 
       if (
-        result.destination.index < columns[destinationColumnIndex].items.length
+        // 끝자리로 이동할 때
+        result.destination.index <=
+        columns[destinationColumnIndex].items.length - 1
       ) {
-        const destinationItemNum =
+        let destinationItemNum =
           +columns[destinationColumnIndex].items[
             result.destination.index + 1
-          ]?.content.split(" ")[1] || 1;
+          ]?.content.split(" ")[1] ?? 11111111;
+
+        if (
+          // 같은 판에서 올릴때
+          result.destination.droppableId === result.source.droppableId &&
+          result.destination.index < result.source.index
+        ) {
+          destinationItemNum =
+            +columns[destinationColumnIndex].items[
+              result.destination.index
+            ]?.content.split(" ")[1] ?? 22222222;
+        }
+
+        if (result.destination.droppableId !== result.source.droppableId) {
+          destinationItemNum =
+            +columns[destinationColumnIndex].items[
+              result.destination.index
+            ]?.content.split(" ")[1];
+        }
+
+        console.log(result);
+        console.log(columns[destinationColumnIndex]);
+        console.log(sourceItemNum, destinationItemNum);
 
         if (
           sourceItemNum % 2 === 0 &&
